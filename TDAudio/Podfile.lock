@@ -1,0 +1,85 @@
+PODS:
+  - Bolts/Tasks (1.8.4)
+  - CleanroomLogger (5.1.1)
+  - Crashlytics (3.8.6):
+    - Fabric (~> 1.6.3)
+  - Fabric (1.6.13)
+  - Firebase/Core (4.1.1):
+    - FirebaseAnalytics (= 4.0.3)
+    - FirebaseCore (= 4.0.6)
+  - Firebase/RemoteConfig (4.1.1):
+    - Firebase/Core
+    - FirebaseRemoteConfig (= 2.0.2)
+  - FirebaseAnalytics (4.0.3):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseCore (4.0.6):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseInstanceID (2.0.2):
+    - FirebaseCore (~> 4.0)
+  - FirebaseRemoteConfig (2.0.2):
+    - FirebaseAnalytics (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - Protobuf (~> 3.1)
+  - Google-Mobile-Ads-SDK (7.23.0)
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+  - Parse (1.15.2):
+    - Bolts/Tasks (~> 1.8)
+  - Protobuf (3.4.0)
+  - R.swift (3.3.0):
+    - R.swift.Library (~> 3.0.2)
+  - R.swift.Library (3.0.2)
+  - SDWebImage (4.1.0):
+    - SDWebImage/Core (= 4.1.0)
+  - SDWebImage/Core (4.1.0)
+  - SwiftyJSON (3.1.4)
+  - UICheckbox.Swift (1.0.0)
+
+DEPENDENCIES:
+  - CleanroomLogger (~> 5.1)
+  - Crashlytics
+  - Fabric
+  - Firebase/Core
+  - Firebase/RemoteConfig
+  - Google-Mobile-Ads-SDK
+  - Parse
+  - R.swift
+  - SDWebImage (~> 4.0)
+  - SwiftyJSON (~> 3.1)
+  - UICheckbox.Swift (~> 1.0)
+
+SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  CleanroomLogger: d921cc92d8e89c067653c0700b74a96b4e07fdab
+  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
+  Firebase: 052c0de688fc87b414996eea13e223dd9fee3fa2
+  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
+  FirebaseCore: 28def3c643989c97ea5a69ea5000f5fa9902b9fd
+  FirebaseInstanceID: c4c7fca62c7b7330caee5da04f19a37ea37bb1c1
+  FirebaseRemoteConfig: 5b3e3301ef2f237b1b588e8ef3211b5a22e9e15d
+  Google-Mobile-Ads-SDK: a43dc8efdb566c74d00ac6934c781de969348d80
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  Parse: 7daa8804b876d250a65420534c97d2d786c3b0b4
+  Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
+  R.swift: bde9704d50ff36820f49e266bc88ef545e1e9b36
+  R.swift.Library: fbdec16c9802ad104fc1ba53415dc190e6ec5c73
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  UICheckbox.Swift: 85715689206fac5bae38b308f19c2a3e00442c3b
+
+PODFILE CHECKSUM: feb3549a184295ba03f6de2b4dbe04152fa1e281
+
+COCOAPODS: 1.3.1
