@@ -16,12 +16,12 @@ typealias Error = (Int) -> Void
 struct Constants {
     
     struct BuildConfig {
-        static let DEBUG = true
+        static let DEBUG = false
     }
     
     struct Application {
         static let SPLASH_SCREEN_DURATION_MIN : Double = 2000 //in milisecond
-        static let IMAGE_SLIDER_INTERVAL = 12 //in second
+        static let IMAGE_SLIDER_INTERVAL = 15 //in second
     }
    
     struct DataStore {

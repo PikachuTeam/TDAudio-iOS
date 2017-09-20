@@ -232,7 +232,10 @@ class AudioManager :NSObject{
     
     
     func isEndPlaying() -> Bool {
-        let duration = Float(CMTimeGetSeconds((self.player?.currentItem?.asset.duration)!))
+        var duration = Float(0)
+        if (player?.currentItem) != nil {
+            duration = Float(CMTimeGetSeconds((self.player?.currentItem?.asset.duration)!))
+        }
         return Float((self.player?.currentTime().seconds)!) == duration
     }
 }
