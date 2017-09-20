@@ -13,7 +13,8 @@ import MediaPlayer
 
 protocol AudioPlayerDelegate : BaseViewDelegate{
     func audioInteralUpdate(value: Float)
-    func audioChangeStatePlay()
+    func audioPreparing()
+    func audioChangeStatePlaying()
     func audioChangeStatePause()
     func askingToUnlockAudio(item: AudioModel)
     func audioChanged(item: AudioModel)
@@ -31,6 +32,8 @@ protocol AudioPlayerInterface : BaseViewModelInterface{
     func viewWillAppear()
     func viewDidDisappear()
     func audioUnlocked(item: AudioModel)
+    func getCurrentPlayingTime() -> Float
+   
 }
 
 class AudioPlayerViewModel : AudioPlayerInterface{
@@ -94,8 +97,10 @@ class AudioPlayerViewModel : AudioPlayerInterface{
     func viewWillAppear(){
         AudioManager.instance.registerAudioEventChangeListener(identifier: "AudioPlayerViewModel.AudioEvent") { (audioEvent) in
             switch audioEvent {
-            case .Play:
-                self.viewDelegate?.audioChangeStatePlay()
+            case .Preparing:
+                self.viewDelegate?.audioPreparing()
+            case .Playing:
+                self.viewDelegate?.audioChangeStatePlaying()
             case .Pause:
                 self.viewDelegate?.audioChangeStatePause()
             case .PlayLock:
@@ -114,8 +119,14 @@ class AudioPlayerViewModel : AudioPlayerInterface{
     }
     
     func audioUnlocked(item: AudioModel) {
+        Log.info?.message("unlocked audio: \(String(describing: item.name))")
+        item.isUnlocked = true
         DataManager.instance.setUnlockItem(id: item.id!, isUnlocked: true)
         AudioManager.instance.play()
+    }
+    
+    func getCurrentPlayingTime() -> Float{
+        return Float(AudioManager.instance.getCurrentPlayingTime())
     }
 }
 

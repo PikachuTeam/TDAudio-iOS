@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ADS-uX-53W">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ADS-uX-53W">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -319,6 +319,13 @@
                                             <action selector="openDetail:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2Cx-Bh-mcL"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loading" translatesAutoresizingMaskIntoConstraints="NO" id="tq6-r7-kIW">
+                                        <rect key="frame" x="182" y="15" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="jNy-Hy-xek"/>
+                                            <constraint firstAttribute="width" constant="50" id="t0h-Nm-cEt"/>
+                                        </constraints>
+                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rKQ-ab-UUF">
                                         <rect key="frame" x="192" y="25" width="30" height="30"/>
                                         <constraints>
@@ -330,8 +337,7 @@
                                             <color key="titleShadowColor" red="1" green="0.98318697740000005" blue="0.4577758797" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="switchPlayAndPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xlw-ni-bqg"/>
-                                            <action selector="switchPlayAndPause:" destination="AUg-xc-gNz" eventType="touchUpInside" id="wMp-l4-f2r"/>
+                                            <action selector="switchPlayAndPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zB5-JN-2tr"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q4I-ze-auG">
@@ -375,6 +381,8 @@
                                     <constraint firstItem="rKQ-ab-UUF" firstAttribute="centerX" secondItem="1Qx-Zv-fr6" secondAttribute="centerX" id="R3c-oC-EcV"/>
                                     <constraint firstItem="rKQ-ab-UUF" firstAttribute="centerY" secondItem="1Qx-Zv-fr6" secondAttribute="centerY" id="UVl-to-vXH"/>
                                     <constraint firstAttribute="trailing" secondItem="Nas-86-scx" secondAttribute="trailing" id="V68-Hk-JKa"/>
+                                    <constraint firstItem="tq6-r7-kIW" firstAttribute="centerX" secondItem="rKQ-ab-UUF" secondAttribute="centerX" id="ZWY-QM-Ohj"/>
+                                    <constraint firstItem="tq6-r7-kIW" firstAttribute="centerY" secondItem="rKQ-ab-UUF" secondAttribute="centerY" id="aAz-Sd-ofc"/>
                                     <constraint firstItem="q4I-ze-auG" firstAttribute="centerY" secondItem="rKQ-ab-UUF" secondAttribute="centerY" id="arS-zm-T5g"/>
                                     <constraint firstItem="EUd-T1-li8" firstAttribute="centerY" secondItem="rKQ-ab-UUF" secondAttribute="centerY" id="bpr-HW-9DS"/>
                                     <constraint firstAttribute="height" constant="80" id="fJY-JE-oDi"/>
@@ -411,6 +419,7 @@
                         <outlet property="cbFemale" destination="gHY-N6-t6b" id="J9Q-p8-ghu"/>
                         <outlet property="cbMale" destination="nCg-sV-B2H" id="Mfh-MU-UJl"/>
                         <outlet property="imgBackground" destination="ywj-tq-fX0" id="BPN-nh-zB5"/>
+                        <outlet property="imgLoading" destination="tq6-r7-kIW" id="DQ2-Vs-4Ho"/>
                         <outlet property="tableView" destination="oN6-9L-bsU" id="qXy-oH-LE2"/>
                         <outlet property="viewControler" destination="1Qx-Zv-fr6" id="J7X-zk-o85"/>
                         <segue destination="AUg-xc-gNz" kind="show" identifier="showAudioPlayerScreen" id="FrJ-eY-YUb"/>

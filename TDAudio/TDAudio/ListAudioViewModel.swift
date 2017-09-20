@@ -13,7 +13,8 @@ import CleanroomLogger
 protocol ListAudioDelegate: BaseViewDelegate {
     func itemsDidChange()
     func didSelectItem(item : AudioModel)
-    func audioChangeStatePlay()
+    func audioPreparing()
+    func audioChangeStatePlaying()
     func audioChangeStatePause()
     func audioChangeStateNext()
     func audioChangeStatePrevious()
@@ -23,6 +24,7 @@ protocol ListAudioDelegate: BaseViewDelegate {
 protocol ListAudioViewModelInterface : BaseViewModelInterface{
     var itemsCount : Int {get}
     func itemAtIndex(index : Int) -> AudioModel?
+    func indexOf(item: AudioModel) -> Int?
     func didSelectItemAtIndex(index: Int)
     func didChangeSpeakerFilter(male: Bool, female: Bool)
     func switchPlayAndPause()
@@ -32,7 +34,8 @@ protocol ListAudioViewModelInterface : BaseViewModelInterface{
     func isPlayingAudio() -> Bool
     func viewWillDisappear()
     func viewWillAppear()
-    func unlockedNewAudio(index: Int)
+    func unlockedNewAudio(unlockedItem : AudioModel)
+    func getCurrentPlayingTime() -> Double
 }
 
 class ListAudioViewModel : ListAudioViewModelInterface{
@@ -57,12 +60,18 @@ class ListAudioViewModel : ListAudioViewModelInterface{
         return 0
     }
     
+    func indexOf(item: AudioModel) -> Int?{
+        return items?.index(of: item)
+    }
+    
     func itemAtIndex(index: Int) -> AudioModel? {
         if let items = items {
             return items[index]
         }
         return nil
     }
+    
+    
     
     func didSelectItemAtIndex(index: Int) {
         let item = itemAtIndex(index: index)!
@@ -71,16 +80,21 @@ class ListAudioViewModel : ListAudioViewModelInterface{
                 AudioManager.instance.prepare(audioIndex: index)
                 AudioManager.instance.play()
             }else {
-                if AudioManager.instance.isEndPlaying(){
-                    AudioManager.instance.startOver()
-                }
-                if(!AudioManager.instance.isPlaying()){
-                    AudioManager.instance.play()
-                }
+                continuePlayingOrStartOver()
             }
             viewDelegate?.didSelectItem(item: item)
         }else{
+            AudioManager.instance.pause()
             viewDelegate?.askingToUnlockAudio(index: index, item: item)
+        }
+    }
+    
+    func continuePlayingOrStartOver()  {
+        if AudioManager.instance.isEndPlaying(){
+            AudioManager.instance.startOver()
+        }
+        if(!AudioManager.instance.isPlaying()){
+            AudioManager.instance.play()
         }
     }
     
@@ -122,8 +136,10 @@ class ListAudioViewModel : ListAudioViewModelInterface{
     func viewWillAppear(){
         AudioManager.instance.registerAudioEventChangeListener(identifier: "ListAudioViewModel.AudioEvent") { (audioEvent) in
             switch audioEvent {
-            case .Play:
-                self.viewDelegate?.audioChangeStatePlay()
+            case .Preparing:
+                self.viewDelegate?.audioPreparing()
+            case .Playing:
+                self.viewDelegate?.audioChangeStatePlaying()
             case .Pause:
                 self.viewDelegate?.audioChangeStatePause()
             case .Next:
@@ -140,10 +156,15 @@ class ListAudioViewModel : ListAudioViewModelInterface{
         AudioManager.instance.unregisterAudioEventChange(identifier: "ListAudioViewModel.AudioEvent")
     }
     
-    func unlockedNewAudio(index: Int) {
-        let item = itemAtIndex(index: index)!
-        DataManager.instance.setUnlockItem(id: item.id!, isUnlocked: true)
-        didSelectItemAtIndex(index: index)
+    func unlockedNewAudio(unlockedItem : AudioModel){
+        Log.info?.message("unlocked audio: \(String(describing: unlockedItem.name))")
+        unlockedItem.isUnlocked = true
+        DataManager.instance.setUnlockItem(id: unlockedItem.id!, isUnlocked: true)
+        didSelectItemAtIndex(index: indexOf(item: unlockedItem)!)
+    }
+    
+    func getCurrentPlayingTime() -> Double{
+        return AudioManager.instance.getCurrentPlayingTime()
     }
     
 }

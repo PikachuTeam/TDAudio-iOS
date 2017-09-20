@@ -20,7 +20,7 @@ class AudioManager :NSObject{
     private var periodicTimeHandler: ((Double) -> Void)?
     private var audioIndex : Int? = nil
     private var currentAudioItem : AudioModel? = nil
-    
+    private var isStartPlaying = false
     
     private var audioEvent = DynamicType<AudioEvent>()
     typealias AudioEventListener =  (AudioEvent) -> Void
@@ -38,8 +38,13 @@ class AudioManager :NSObject{
         self.audioIndex = audioIndex
         self.currentAudioItem = getAudioItem()
         
-        //        self.pause()
+        isStartPlaying = false
         unRegisterAudioInteralUpdate(removeHandler: false)
+        
+        if observer != nil {
+            player?.removeTimeObserver(observer!)
+            observer = nil
+        }
         
         playerItem = AVPlayerItem(url: URL(string: (currentAudioItem!.url)!)!)
         player =  AVPlayer(playerItem: playerItem)
@@ -58,7 +63,19 @@ class AudioManager :NSObject{
         ]
         UIApplication.shared.beginReceivingRemoteControlEvents()
         
+        
         Log.info?.message("prepare playing \(String(describing: currentAudioItem?.name))")
+        
+        
+        observer =  player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: DispatchQueue.main, using: {_ in
+            if !self.isStartPlaying && self.player!.currentTime().seconds > 0{
+                self.isStartPlaying = true
+                self.audioEvent.value = AudioEvent.Playing
+            }
+            if let handler = self.periodicTimeHandler {
+                handler(self.player!.currentTime().seconds)
+            }
+        })
     }
     
     
@@ -70,9 +87,13 @@ class AudioManager :NSObject{
         if let player = player{
             if(currentAudioItem?.isUnlocked)! {
                 player.play()
-                Log.info?.message("start playing \(String(describing: currentAudioItem?.name))")
-                
-                audioEvent.value = AudioEvent.Play
+                if !isStartPlaying{
+                    Log.info?.message("preparing \(String(describing: currentAudioItem?.name))")
+                    audioEvent.value = AudioEvent.Preparing
+                }else{
+                    Log.info?.message("start playing \(String(describing: currentAudioItem?.name))")
+                    audioEvent.value = AudioEvent.Playing
+                }
             }else{
                 Log.error?.message("Item is locked")
                  audioEvent.value = AudioEvent.PlayLock
@@ -177,16 +198,17 @@ class AudioManager :NSObject{
         return nil
     }
     
-    
+    func getCurrentPlayingTime() -> Double {
+        if let player = player{
+            return player.currentTime().seconds
+        }
+        return 0
+    }
     
     func registerAudioInteralUpdate(periodicTimeHandler: ((Double) -> Void)?)  {
         if(periodicTimeHandler != nil){
             self.periodicTimeHandler = periodicTimeHandler
-            observer =  player?.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1, 1), queue: DispatchQueue.main, using: {_ in
-                if let handler = periodicTimeHandler {
-                    handler(self.player!.currentTime().seconds)
-                }
-            })
+       
         }
     }
     
@@ -197,10 +219,6 @@ class AudioManager :NSObject{
         
         if(removeHandler){
             periodicTimeHandler = nil
-        }
-        if observer != nil {
-            player?.removeTimeObserver(observer!)
-            observer = nil
         }
     }
     

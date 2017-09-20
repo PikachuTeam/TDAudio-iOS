@@ -16,6 +16,7 @@ class AdsManager {
     private var count = 0
 //    private var startAppRewarded: STAStartAppAd?
 //    private var startAppDelegate : STADelegateProtocol?
+    
     private var isAdmobAdsLoading = false
     
     private init(){
@@ -24,9 +25,8 @@ class AdsManager {
     func configAds() {
         if(isAdmobAdsEnable()){
             GADMobileAds.configure(withApplicationID: Constants.BuildConfig.DEBUG ? Constants.Ads.GOOGLE_APP_ID_DEBUG : Constants.Ads.GOOGLE_APP_ID)
-            //Add test devices
             let request = GADRequest()
-            request.testDevices = Constants.Ads.TEST_DEVICES
+            request.testDevices = [ kGADSimulatorID ];
         }
 //        if(isStartAppAdsEnable()){
 //            let sdk: STAStartAppSDK = STAStartAppSDK.sharedInstance()
@@ -68,19 +68,25 @@ class AdsManager {
     
     fileprivate func showAdmobAds(viewController: UIViewController){
         if GADRewardBasedVideoAd.sharedInstance().isReady {
+            Log.warning?.message("++++ Showing admob")
             GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: viewController)
         }else{
             Log.error?.message("Admob ads is not ready")
+            prepareAdmobAds()
         }
-        prepareAdmobAds()
+//        prepareAdmobAds()
     }
     
     func prepareAdmobAds()  {
         if isAdmobAdsEnable(){
             if !GADRewardBasedVideoAd.sharedInstance().isReady && !isAdmobAdsLoading{
-                GADRewardBasedVideoAd.sharedInstance().load(GADRequest(), withAdUnitID: Constants.BuildConfig.DEBUG ? Constants.Ads.GOOGLE_AD_UNIT_DEBUG : Constants.Ads.GOOGLE_AD_UNIT)
+                //Add test devices
+                let request = GADRequest()
+                request.testDevices = Constants.Ads.TEST_DEVICES
+                let adUnit = Constants.BuildConfig.DEBUG ? Constants.Ads.GOOGLE_AD_UNIT_DEBUG : Constants.Ads.GOOGLE_AD_UNIT
+                GADRewardBasedVideoAd.sharedInstance().load(request, withAdUnitID: adUnit)
                 isAdmobAdsLoading = true
-                Log.warning?.message("Admob is loading")
+                Log.warning?.message("Preparing Admob")
             }else{
                 Log.warning?.message("Admob is ready or still loading, no need to reload")
             }

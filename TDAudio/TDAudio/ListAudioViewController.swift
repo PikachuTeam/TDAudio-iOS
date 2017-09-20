@@ -18,12 +18,14 @@ class ListAudioViewController: BaseAudioViewController {
     @IBOutlet weak var viewControler: UIView!
     @IBOutlet weak var btnPlay: UIButton!
     @IBOutlet weak var imgBackground: UIImageView!
+    @IBOutlet weak var imgLoading: UIImageView!
     
     
     let viewModel = ListAudioViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.backgroundView = nil
         viewModel.viewDelegate = self
         configView()
@@ -42,11 +44,12 @@ class ListAudioViewController: BaseAudioViewController {
     @IBAction func previous(_ sender: Any) {
         viewModel.previous()
     }
-
+    
     @IBAction func openDetail(_ sender: Any) {
+        viewModel.continuePlayingOrStartOver()
         performSegue(withIdentifier: "showAudioPlayerScreen", sender: self)
     }
-
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -54,6 +57,7 @@ class ListAudioViewController: BaseAudioViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel.viewWillAppear()
         reloadUIState()
     }
@@ -74,9 +78,9 @@ class ListAudioViewController: BaseAudioViewController {
                 self.view.getContraint(withIdentifier: "tableViewBottomContraint")?.constant = viewControler.frame.size.height
             }
             if(viewModel.isPlayingAudio()){
-                 btnPlay.setImage(R.image.pause(), for: .normal)
+                btnPlay.setImage(R.image.pause(), for: .normal)
             }else{
-                  btnPlay.setImage(R.image.play(), for: .normal)
+                btnPlay.setImage(R.image.play(), for: .normal)
             }
         }else{
             if(!viewControler.isHidden){
@@ -84,6 +88,7 @@ class ListAudioViewController: BaseAudioViewController {
                 self.view.getContraint(withIdentifier: "tableViewBottomContraint")?.constant = 0
             }
         }
+        setPlayingState(isPlaying: viewModel.getCurrentPlayingTime() > 0)
     }
     
     func configView()  {
@@ -109,11 +114,31 @@ class ListAudioViewController: BaseAudioViewController {
         let alert = UIAlertController(title: "Mở khoá", message: "Xem quảng cáo để mở khoá audio này", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Huỷ", style: UIAlertActionStyle.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Đồng ý", style: UIAlertActionStyle.default, handler: { action in
-//            item.isUnlocked = true
-//            self.viewModel.unlockedNewAudio(index: index)
-            super.showAds()
+            super.showAds(lockedAudio: item)
         }))
-        self.present(alert, animated: false, completion: nil)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    override func didUnlockAudio(unlockAudio: AudioModel) {
+        self.viewModel.unlockedNewAudio(unlockedItem: unlockAudio)
+    }
+    
+    func setPlayingState(isPlaying: Bool)  {
+        if viewModel.getCurrentAudioItem() != nil{
+            if !isPlaying{
+                imgLoading.rotate360Degrees()
+                imgLoading.isHidden = false
+                btnPlay.isHidden = true
+            }else{
+                imgLoading.layer.removeAllAnimations()
+                imgLoading.isHidden = true
+                btnPlay.isHidden = false
+                btnPlay.setImage(R.image.pause(), for: .normal)
+            }
+        }
     }
     
     deinit {
@@ -164,6 +189,7 @@ class AudioTableViewCell : UITableViewCell{
             viewContainer.alpha = 1
         }
     }
+    
 }
 
 extension ListAudioViewController : UITableViewDataSource,UITableViewDelegate {
@@ -195,7 +221,12 @@ extension ListAudioViewController : ListAudioDelegate {
         openAudioPlayerScreen(item: item)
     }
     
-    func audioChangeStatePlay(){
+    func audioPreparing() {
+        setPlayingState(isPlaying: false)
+    }
+    
+    func audioChangeStatePlaying(){
+        setPlayingState(isPlaying: true)
         btnPlay.setImage(R.image.pause(), for: .normal)
     }
     

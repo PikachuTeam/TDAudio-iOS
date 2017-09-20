@@ -31,6 +31,8 @@ class AudioPlayerViewController: BaseAudioViewController {
         viewModel.viewDelegate = self
         
         ImageSlider.instance.start(imgA: imgA, imgB: imgB)
+        
+        setPlayingState(isPlaying: viewModel.getCurrentPlayingTime() > 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -43,11 +45,10 @@ class AudioPlayerViewController: BaseAudioViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        viewModel.viewDidDisappear()
-        ImageSlider.instance.stop()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel.viewWillAppear()
     }
     
@@ -76,11 +77,38 @@ class AudioPlayerViewController: BaseAudioViewController {
         let alert = UIAlertController(title: "Mở khoá", message: "Xem quảng cáo để mở khoá audio này", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Huỷ", style: UIAlertActionStyle.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Đồng ý", style: UIAlertActionStyle.default, handler: { action in
-//            item.isUnlocked = true
-//            self.viewModel.audioUnlocked(item: item)
-            super.showAds()
+
+            super.showAds(lockedAudio: item)
         }))
-        self.present(alert, animated: false, completion: nil)
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    override func didUnlockAudio(unlockAudio: AudioModel) {
+        self.viewModel.audioUnlocked(item: unlockAudio)
+    }
+    
+    func setPlayingState(isPlaying: Bool)  {
+        if !isPlaying{
+            imgLoading.rotate360Degrees()
+            imgLoading.isHidden = false
+            btnPlay.isHidden = true
+        }else{
+            labelDuration.text = viewModel.getDurationText()
+            slider.value = viewModel.getCurrentPlayingTime()
+            slider.maximumValue = viewModel.getDurationNumber()!
+            
+            imgLoading.layer.removeAllAnimations()
+            imgLoading.isHidden = true
+            btnPlay.isHidden = false
+            btnPlay.setImage(R.image.pause(), for: .normal)
+        }
+    }
+    
+    deinit {
+        viewModel.viewDidDisappear()
+        ImageSlider.instance.stop()
     }
 }
 
@@ -90,11 +118,6 @@ extension AudioPlayerViewController : AudioPlayerDelegate {
         slider.isUserInteractionEnabled = true
         self.slider.value = value
         if value != 0 {
-            if !imgLoading.isHidden{
-                imgLoading.layer.removeAllAnimations()
-                imgLoading.isHidden = true
-                btnPlay.isHidden = false
-            }
             if slider.maximumValue == 0 {
                 slider.maximumValue = viewModel.getDurationNumber()!
             }
@@ -106,15 +129,17 @@ extension AudioPlayerViewController : AudioPlayerDelegate {
             slider.isUserInteractionEnabled = false
             labelDuration.text = "00:00"
             labelCurrent.text = "00:00"
-            imgLoading.rotate360Degrees()
-            imgLoading.isHidden = false
-            btnPlay.isHidden = true
         }
     }
     
-    func audioChangeStatePlay(){
-        btnPlay.setImage(R.image.pause(), for: .normal)
+    func audioPreparing() {
+        setPlayingState(isPlaying: false)
     }
+    
+    func audioChangeStatePlaying(){
+        setPlayingState(isPlaying: true)
+    }
+    
     func audioChangeStatePause(){
         btnPlay.setImage(R.image.play(), for: .normal)
     }

@@ -16,15 +16,20 @@ protocol BaseViewControllerInterface  {
 }
 
 class BaseAudioViewController  : UIViewController {
+    
+    fileprivate var lockedAudio : AudioModel?
+    
     override  func viewDidLoad() {
         super.viewDidLoad()
         becomeFirstResponder()
         self.navigationController?.navigationBar.transparentNavigationBar()
         
-        AdsManager.instance.setAdmobAdsDelegate(delegate: self)
-        AdsManager.instance.prepareAdmobAds()
-        
+//        AdsManager.instance.setAdmobAdsDelegate(delegate: self)
 //        AdsManager.instance.setStartAppAdsDelegate(delegate: self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        configAdmobAds()
     }
 
     override  func didReceiveMemoryWarning() {
@@ -50,8 +55,18 @@ class BaseAudioViewController  : UIViewController {
         }
     }
     
-    func showAds()  {
+    func configAdmobAds()  {
+        AdsManager.instance.setAdmobAdsDelegate(delegate: self)
+        AdsManager.instance.prepareAdmobAds()
+    }
+    
+    func showAds(lockedAudio: AudioModel)  {
+        self.lockedAudio = lockedAudio
         AdsManager.instance.showAds(viewController: self)
+    }
+    
+    open func didUnlockAudio(unlockAudio: AudioModel)  {
+        
     }
  
 }
@@ -59,32 +74,38 @@ class BaseAudioViewController  : UIViewController {
 extension BaseAudioViewController : GADRewardBasedVideoAdDelegate {
     
     func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd, didRewardUserWith reward: GADAdReward) {
-        Log.warning?.message("Reward received with currency: \(reward.type), amount \(reward.amount).")
+        Log.info?.message("-------- DidReward, unlocking")
+        AdsManager.instance.admobFinishedLoading()
+        didUnlockAudio(unlockAudio: self.lockedAudio!)
     }
     
     func rewardBasedVideoAdDidReceive(_ rewardBasedVideoAd:GADRewardBasedVideoAd) {
-        Log.warning?.message("Reward based video ad is received.") //2
+        Log.info?.message("Reward based video ad is received.")
         AdsManager.instance.admobFinishedLoading()
     }
     
     func rewardBasedVideoAdDidOpen(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        Log.warning?.message("Opened reward based video ad.") //1
+        Log.info?.message("Opened reward based video ad.")
+        AdsManager.instance.admobFinishedLoading()
     }
     
     func rewardBasedVideoAdDidStartPlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        Log.warning?.message("Reward based video ad started playing.")
+        Log.info?.message("Reward based video ad started playing.")
+        AdsManager.instance.admobFinishedLoading()
     }
     
     func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        Log.warning?.message("Reward based video ad is closed.")
+        Log.info?.message("Reward based video ad is closed.")
+        AdsManager.instance.admobFinishedLoading()
+        AdsManager.instance.prepareAdmobAds()
     }
     
     func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        Log.warning?.message("Reward based video ad will leave application.")
+        Log.info?.message("Reward based video ad will leave application.")
     }
     
     private func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd, didFailToLoadWithError error: Error) {
-        Log.warning?.message("Reward based video ad failed to load: \(error)")
+        Log.info?.message("Reward based video ad failed to load: \(error)")
         AdsManager.instance.admobFinishedLoading()
     }
 }

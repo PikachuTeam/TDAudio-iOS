@@ -35,7 +35,9 @@ class SplashViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Thử lại", style: UIAlertActionStyle.default, handler: { action in
             self.viewModel.fetchData()
         }))
-        self.present(alert, animated: false, completion: nil)
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func configView() {
