@@ -16,7 +16,7 @@ typealias Error = (Int) -> Void
 struct Constants {
     
     struct BuildConfig {
-        static let DEBUG = true
+        static let DEBUG = false
     }
     
     struct Application {
@@ -54,12 +54,12 @@ struct Constants {
         //google admob
         static let GOOGLE_ADS_NAME = "admob"
             //release
-        static let GOOGLE_APP_ID = "ca-app-pub-3940256099942544~1458002511"//"ca-app-pub-3786715234447481~1167122263"
-        static let GOOGLE_AD_UNIT = "ca-app-pub-3940256099942544/1712485313"//"ca-app-pub-3786715234447481/9512516143"
+        static let GOOGLE_APP_ID = "ca-app-pub-3786715234447481~1167122263"
+        static let GOOGLE_AD_UNIT = "ca-app-pub-3786715234447481/9512516143"
             //debug
         static let GOOGLE_APP_ID_DEBUG = "ca-app-pub-3940256099942544~1458002511"
         static let GOOGLE_AD_UNIT_DEBUG = "ca-app-pub-3940256099942544/1712485313"
-        static let TEST_DEVICES : [Any] = [ kGADSimulatorID ]//, "9ad00eb3ddc4606bd5ddc0855aaf0801", "68028e84cc4d4bec1c7bf802e06e10c7"]
+        static let TEST_DEVICES : [Any] = [kGADSimulatorID, "9ad00eb3ddc4606bd5ddc0855aaf0801", "68028e84cc4d4bec1c7bf802e06e10c7"]
         
         //startapp
         static let STARTAPP_ADS_NAME = "startapp"

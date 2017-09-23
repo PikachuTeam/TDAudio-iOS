@@ -513,7 +513,7 @@
                             </button>
                             <slider opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="C3x-ph-qaL">
                                 <rect key="frame" x="65" y="575" width="284" height="31"/>
-                                <color key="tintColor" red="1" green="0.2026903568" blue="0.20210751399999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.8951586788" green="0.15719801119999999" blue="0.54593589679999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="PIb-tN-Mmi"/>
                                 </constraints>
