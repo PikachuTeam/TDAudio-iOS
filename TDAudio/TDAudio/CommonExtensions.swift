@@ -9,18 +9,20 @@
 import Foundation
 import MediaPlayer
 import UICheckbox_Swift
-
+import SDWebImage
 
 extension UIView {
     func fadeIn(duration: TimeInterval = 3.0, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
         
         weak var weakSelf = self
+        weakSelf?.alpha  = 0
         UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {
             weakSelf?.alpha = 1.0
         }, completion: completion)  }
     
     func fadeOut(duration: TimeInterval = 3.0, delay: TimeInterval = 0.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
         weak var weakSelf = self
+         weakSelf?.alpha  = 1
         UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseIn, animations: {
             weakSelf?.alpha = 0.0
         }, completion: completion)
@@ -66,6 +68,20 @@ extension UIView {
             return constraint
         }
         return nil
+    }
+}
+
+extension UIImageView {
+    func sd_setImage(with: URL,  placeholderImage: UIImage,fadeIn : Bool) {
+        self.sd_setImage(with: with, placeholderImage: placeholderImage) { (image, error, cacheType, url) in
+            if fadeIn{
+                if error == nil{
+                    if cacheType != SDImageCacheType.memory{
+                        self.fadeIn(duration: 1.0)
+                    }
+                }
+            }
+        }
     }
 }
 

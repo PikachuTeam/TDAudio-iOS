@@ -224,11 +224,12 @@ struct _R: Rswift.Validatable {
       
       static func validate() throws {
         if UIKit.UIImage(named: "lock") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'lock' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "next") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'next' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "pause") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'pause' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "loading") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'loading' is used in storyboard 'Main', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "playing") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'playing' is used in storyboard 'Main', but couldn't be loaded.") }
         if UIKit.UIImage(named: "previous") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'previous' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "next") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'next' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "playing") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'playing' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "loading") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'loading' is used in storyboard 'Main', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "placeholder") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'placeholder' is used in storyboard 'Main', but couldn't be loaded.") }
       }
       
       fileprivate init() {}

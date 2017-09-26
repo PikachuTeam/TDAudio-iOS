@@ -159,8 +159,8 @@ class AudioTableViewCell : UITableViewCell{
         self.backgroundColor = UIColor.clear
         viewContainer.cornerRadiusRatio = 0.03
         labelName.text = item.name
-        let placeHolder = Constants.BuildConfig.DEBUG ? nil : R.image.placeholder()
-        imgAudio.sd_setImage(with: URL(string: item.image!)!, placeholderImage: placeHolder, completed: nil)
+        imgAudio.sd_setImage(with: URL(string: item.image!)!, placeholderImage: R.image.placeholder()!, fadeIn: true)
+  
         imgAudio.cornerRadiusRatio = 0.08
         if item == AudioManager.instance.getCurrentAudioItem(){
             imgPlaying.isHidden = false

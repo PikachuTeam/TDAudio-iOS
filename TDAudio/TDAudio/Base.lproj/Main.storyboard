@@ -216,7 +216,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qhX-Pa-4g9">
                                                     <rect key="frame" x="14" y="0.0" width="386" height="89"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TDu-k9-otv">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="TDu-k9-otv">
                                                             <rect key="frame" x="0.0" y="0.0" width="89" height="89"/>
                                                         </imageView>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="playing" translatesAutoresizingMaskIntoConstraints="NO" id="JgC-N0-fX5">
@@ -579,6 +579,7 @@
         <image name="lock" width="85" height="85"/>
         <image name="next" width="85" height="85"/>
         <image name="pause" width="85" height="85"/>
+        <image name="placeholder" width="100" height="100"/>
         <image name="playing" width="85" height="85"/>
         <image name="previous" width="85" height="85"/>
     </resources>
