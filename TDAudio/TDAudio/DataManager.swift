@@ -187,13 +187,7 @@ class DataManager {
                 self.setAds(adsAvailable: adsAvailable)
                 
                 //images
-                var keyImages = Constants.FireBase.KEY_IMAGES
-                let localBuildNumber : Int = Int(Bundle.main.buildVersionNumber!)!
-                let remoteBuildNumder = self.remoteConfig[Constants.FireBase.KEY_PREVIEW_VERSION].numberValue as? Int
-                if localBuildNumber == remoteBuildNumder!{
-                    keyImages = Constants.FireBase.KEY_PREVIEW_IMAGES
-                }
-                let images = self.remoteConfig[keyImages].stringValue
+                let images = self.remoteConfig[Constants.FireBase.KEY_IMAGES].stringValue
                 self.setImages(images: images)
                 
                 //audio

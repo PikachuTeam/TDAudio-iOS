@@ -37,8 +37,6 @@ struct Constants {
     struct FireBase {
         static let KEY_AUDIO_VERSION = "AUDIO_VERSION"
         static let KEY_IMAGES = "IMAGES"
-        static let KEY_PREVIEW_VERSION = "PREVIEW_VERSION"
-        static let KEY_PREVIEW_IMAGES = "PREVIEW_IMAGES"
         static let KEY_ADS_AVAILABLE = "ADS_AVAILABLE"
     }
     
