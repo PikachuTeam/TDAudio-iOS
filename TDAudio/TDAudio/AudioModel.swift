@@ -44,5 +44,12 @@ class AudioModel : NSObject, NSCoding {
         aCoder.encode(url, forKey: "url")
         aCoder.encode(image, forKey: "image")
     }
+    
+    func hasUnlocked() -> Bool {
+        if !AdsManager.instance.isAdmobRewardEnable(){
+            return true
+        }
+        return isUnlocked
+    }
 }
 

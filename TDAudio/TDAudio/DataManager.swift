@@ -159,7 +159,6 @@ class DataManager {
         let exist = status.index(forKey: id) != nil
         if exist {
             return unlockedStatus[id]!
-           
         }
         return false
     }

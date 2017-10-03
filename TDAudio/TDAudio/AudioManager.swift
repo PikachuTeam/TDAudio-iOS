@@ -85,7 +85,7 @@ class AudioManager :NSObject{
     
     func play() {
         if let player = player{
-            if(currentAudioItem?.isUnlocked)! {
+            if(currentAudioItem?.hasUnlocked())! {
                 player.play()
                 if !isStartPlaying{
                     Log.info?.message("preparing \(String(describing: currentAudioItem?.name))")

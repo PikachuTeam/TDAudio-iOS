@@ -146,6 +146,12 @@ class ListAudioViewController: BaseAudioViewController {
     }
 }
 
+class AdsViewCell: UITableViewCell {
+    func startAds()  {
+        
+    }
+}
+
 class AudioTableViewCell : UITableViewCell{
     @IBOutlet weak var imgAudio: UIImageView!
     @IBOutlet weak var labelName: UILabel!
@@ -179,7 +185,7 @@ class AudioTableViewCell : UITableViewCell{
             }
             labelSpeaker.text = "Giọng nam"
         }
-        imgLock.isHidden = item.isUnlocked
+        imgLock.isHidden = item.hasUnlocked()
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -199,11 +205,14 @@ extension ListAudioViewController : UITableViewDataSource,UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AudioTableViewCell
-        let item = viewModel.itemAtIndex(index: indexPath.row)!
-        cell.bindData(item: item)
-        
-        return cell
+//        if indexPath.row % 2 == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AudioTableViewCell
+            let item = viewModel.itemAtIndex(index: indexPath.row)!
+            cell.bindData(item: item)
+            return cell
+//        }
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "ads_cell", for: indexPath) as! AdsViewCell
+//        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -218,7 +227,9 @@ extension ListAudioViewController : ListAudioDelegate {
     }
     
     func didSelectItem(item: AudioModel) {
-        openAudioPlayerScreen(item: item)
+        if Constants.Application.OPEN_SLIDE_SHOW {
+            openAudioPlayerScreen(item: item)
+        }
     }
     
     func audioPreparing() {

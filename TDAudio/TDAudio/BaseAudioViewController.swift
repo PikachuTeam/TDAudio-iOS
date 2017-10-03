@@ -62,7 +62,7 @@ class BaseAudioViewController  : UIViewController {
     
     func showAds(lockedAudio: AudioModel)  {
         self.lockedAudio = lockedAudio
-        AdsManager.instance.showAds(viewController: self)
+        AdsManager.instance.showAdsReward(viewController: self)
     }
     
     open func didUnlockAudio(unlockAudio: AudioModel)  {
@@ -110,18 +110,3 @@ extension BaseAudioViewController : GADRewardBasedVideoAdDelegate {
     }
 }
 
-
-//extension BaseAudioViewController : STADelegateProtocol {
-//    
-//     func didCompleteVideo(_ ad: STAAbstractAd) {
-//        print("StartApp rewarded video had been completed", terminator: "")
-//    }
-//    
-//     @nonobjc func failedLoad(_ ad: STAAbstractAd!, withError error: Error!) {
-//         print("StartApp failedLoad")
-//    }
-//    
-//     @nonobjc func failedShow(_ ad: STAAbstractAd!, withError error: Error!) {
-//        print("StartApp failedShow")
-//    }
-//}

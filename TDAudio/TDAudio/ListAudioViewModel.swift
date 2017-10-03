@@ -75,7 +75,7 @@ class ListAudioViewModel : ListAudioViewModelInterface{
     
     func didSelectItemAtIndex(index: Int) {
         let item = itemAtIndex(index: index)!
-        if(item.isUnlocked){
+        if(item.hasUnlocked()){
             if getCurrentAudioItem() != item {
                 AudioManager.instance.prepare(audioIndex: index)
                 AudioManager.instance.play()
