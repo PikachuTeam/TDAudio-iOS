@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 import UICheckbox_Swift
+import GoogleMobileAds
 
 class ListAudioViewController: BaseAudioViewController {
     
@@ -47,7 +48,7 @@ class ListAudioViewController: BaseAudioViewController {
     
     @IBAction func openDetail(_ sender: Any) {
         viewModel.continuePlayingOrStartOver()
-        performSegue(withIdentifier: "showAudioPlayerScreen", sender: self)
+        openAudioPlayerScreenIfNeeded()
     }
     
     
@@ -106,8 +107,10 @@ class ListAudioViewController: BaseAudioViewController {
         }
     }
     
-    func openAudioPlayerScreen(item: AudioModel) {
-        performSegue(withIdentifier: "showAudioPlayerScreen", sender: self)
+    func openAudioPlayerScreenIfNeeded() {
+        if Constants.Application.OPEN_SLIDE_SHOW {
+            performSegue(withIdentifier: "showAudioPlayerScreen", sender: self)
+        }
     }
     
     func showUnlockAudioPopup(index: Int, item: AudioModel)  {
@@ -147,8 +150,12 @@ class ListAudioViewController: BaseAudioViewController {
 }
 
 class AdsViewCell: UITableViewCell {
-    func startAds()  {
-        
+    
+    @IBOutlet weak var adsBanner: GADBannerView!
+    
+    func run(rootViewController : UIViewController)  {
+        adsBanner.cornerRadiusRatio = 0.03
+        AdsManager.instance.showBannerAds(adsBanner: adsBanner, viewController: rootViewController)
     }
 }
 
@@ -205,14 +212,15 @@ extension ListAudioViewController : UITableViewDataSource,UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
-//        if indexPath.row % 2 == 0 {
+        let item = viewModel.itemAtIndex(index: indexPath.row)!
+        if !item.isAdsItem {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AudioTableViewCell
-            let item = viewModel.itemAtIndex(index: indexPath.row)!
             cell.bindData(item: item)
             return cell
-//        }
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "ads_cell", for: indexPath) as! AdsViewCell
-//        return cell
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ads_cell", for: indexPath) as! AdsViewCell
+        cell.run(rootViewController: self)
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -227,8 +235,9 @@ extension ListAudioViewController : ListAudioDelegate {
     }
     
     func didSelectItem(item: AudioModel) {
-        if Constants.Application.OPEN_SLIDE_SHOW {
-            openAudioPlayerScreen(item: item)
+        if !item.isAdsItem{
+            reloadUIState()
+            openAudioPlayerScreenIfNeeded()
         }
     }
     

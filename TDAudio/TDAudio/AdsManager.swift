@@ -15,7 +15,7 @@ class AdsManager {
     private var adsAvailable : [String] = []
     private var count = 0
     private var isAdmobRewardAvailable :Bool? = nil
-    private var isAdmobNativeAvailable :Bool? = nil
+    private var isAdmobBannerAvailable :Bool? = nil
     
     private var isAdmobAdsLoading = false
     
@@ -25,15 +25,27 @@ class AdsManager {
     func configAds() {
         if(isAdmobRewardEnable()){
             GADMobileAds.configure(withApplicationID: Constants.BuildConfig.DEBUG ? Constants.Ads.GOOGLE_APP_ID_DEBUG : Constants.Ads.GOOGLE_APP_ID)
-            let request = GADRequest()
-            request.testDevices = [ kGADSimulatorID ];
         }
     }
     
     func showAdsReward(viewController: UIViewController) {
         if(isAdmobRewardEnable()){
-            showAdmobAds(viewController: viewController)
+            if GADRewardBasedVideoAd.sharedInstance().isReady {
+                Log.warning?.message("++++ Showing admob")
+                GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: viewController)
+            }else{
+                Log.error?.message("Admob ads is not ready")
+                prepareAdmobAds()
+            }
         }
+    }
+    
+    func showBannerAds(adsBanner: GADBannerView, viewController : UIViewController)  {
+        adsBanner.adUnitID = Constants.BuildConfig.DEBUG ? Constants.Ads.GOOGLE_AD_BANNER_UNIT_DEBUG : Constants.Ads.GOOGLE_AD_BANNER_UNIT
+        adsBanner.rootViewController = viewController
+        let request = GADRequest()
+        request.testDevices = Constants.Ads.TEST_DEVICES
+        adsBanner.load(request)
     }
     
     func setAdmobAdsDelegate(delegate: GADRewardBasedVideoAdDelegate)  {
@@ -44,16 +56,7 @@ class AdsManager {
     func admobFinishedLoading()  {
         isAdmobAdsLoading = false
     }
-    
-    fileprivate func showAdmobAds(viewController: UIViewController){
-        if GADRewardBasedVideoAd.sharedInstance().isReady {
-            Log.warning?.message("++++ Showing admob")
-            GADRewardBasedVideoAd.sharedInstance().present(fromRootViewController: viewController)
-        }else{
-            Log.error?.message("Admob ads is not ready")
-            prepareAdmobAds()
-        }
-    }
+
     
     func prepareAdmobAds()  {
         if isAdmobRewardEnable(){
@@ -70,8 +73,6 @@ class AdsManager {
             }
         }
     }
-    
-
     
     fileprivate func getAdsAvailable() -> [String] {
         if adsAvailable.isEmpty{
@@ -90,11 +91,11 @@ class AdsManager {
         return isAdmobRewardAvailable!
     }
     
-     func isAdmobNativeEnable() ->Bool{
-        if isAdmobNativeAvailable == nil{
-            isAdmobNativeAvailable = getAdsAvailable().index(of: Constants.Ads.GOOGLE_ADS_NATIVE_NAME) != nil
+     func isAdmobBannerEnable() ->Bool{
+        if isAdmobBannerAvailable == nil{
+            isAdmobBannerAvailable = getAdsAvailable().index(of: Constants.Ads.GOOGLE_ADS_BANNER_NAME) != nil
         }
-        return isAdmobNativeAvailable!
+        return isAdmobBannerAvailable!
     }
     
 }

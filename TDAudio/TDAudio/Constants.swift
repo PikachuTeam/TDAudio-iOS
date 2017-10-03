@@ -22,8 +22,10 @@ struct Constants {
     struct Application {
         static let SPLASH_SCREEN_DURATION_MIN : Double = 2000 //in milisecond
         static let IMAGE_SLIDER_INTERVAL = 15 //in second
-        static let ADS_STEPS = 4
-        static let OPEN_SLIDE_SHOW = true
+        static let ADS_STEPS = 6
+        static let ADS_STEPS_DEBUG = 2
+        static let OPEN_SLIDE_SHOW = false
+        
     }
    
     struct DataStore {
@@ -53,16 +55,16 @@ struct Constants {
     struct Ads {
         //google admob
         static let GOOGLE_ADS_REWARD_NAME = "admob_reward"
-        static let GOOGLE_ADS_NATIVE_NAME = "admob_native"
+        static let GOOGLE_ADS_BANNER_NAME = "admob_banner"
             //release
         static let GOOGLE_APP_ID = "ca-app-pub-3786715234447481~1167122263"
         static let GOOGLE_AD_REWARD_UNIT = "ca-app-pub-3786715234447481/9512516143"
-        static let GOOGLE_AD_NATIVE_UNIT = "ca-app-pub-3786715234447481/7794708397"
+        static let GOOGLE_AD_BANNER_UNIT = "ca-app-pub-3786715234447481/1621495367"
         
             //debug
         static let GOOGLE_APP_ID_DEBUG = "ca-app-pub-3940256099942544~1458002511"
         static let GOOGLE_AD_REWARD_UNIT_DEBUG = "ca-app-pub-3940256099942544/1712485313"
-        static let GOOGLE_AD_NATIVE_UNIT_DEBUG = "ca-app-pub-3940256099942544/2247696110"
+        static let GOOGLE_AD_BANNER_UNIT_DEBUG = "ca-app-pub-3940256099942544/6300978111"
         
         static let TEST_DEVICES : [Any] = [kGADSimulatorID, "9ad00eb3ddc4606bd5ddc0855aaf0801", "68028e84cc4d4bec1c7bf802e06e10c7"]
         

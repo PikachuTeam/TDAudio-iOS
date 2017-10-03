@@ -261,7 +261,7 @@
                                                             </constraints>
                                                         </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.89580634715025909" green="0.89580634715025909" blue="0.89580634715025909" alpha="0.39417363556338031" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.87933128240000002" green="0.87933128240000002" blue="0.87933128240000002" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="JgC-N0-fX5" firstAttribute="top" secondItem="qhX-Pa-4g9" secondAttribute="top" id="3yi-BF-XFs"/>
                                                         <constraint firstItem="TDu-k9-otv" firstAttribute="height" secondItem="JgC-N0-fX5" secondAttribute="height" id="7JO-LV-3Ht"/>
@@ -310,8 +310,23 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KKq-YC-brG" id="0RN-YY-bhn">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Szd-4r-aWK" customClass="GADBannerView">
+                                                    <rect key="frame" x="14" y="0.0" width="386" height="90"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Szd-4r-aWK" firstAttribute="top" secondItem="0RN-YY-bhn" secondAttribute="top" id="EEP-34-kk4"/>
+                                                <constraint firstAttribute="bottom" secondItem="Szd-4r-aWK" secondAttribute="bottom" constant="10" id="Fa0-0B-fAZ"/>
+                                                <constraint firstItem="Szd-4r-aWK" firstAttribute="leading" secondItem="0RN-YY-bhn" secondAttribute="leading" constant="14" id="LZS-rA-Bmf"/>
+                                                <constraint firstAttribute="trailing" secondItem="Szd-4r-aWK" secondAttribute="trailing" constant="14" id="u7h-D1-AZW"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="adsBanner" destination="Szd-4r-aWK" id="tMn-yT-IIa"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

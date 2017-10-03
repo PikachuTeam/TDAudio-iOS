@@ -15,6 +15,7 @@ class AudioModel : NSObject, NSCoding {
     var url : String? = nil
     var image :String? = nil
     var isUnlocked : Bool = false
+    var isAdsItem = false
     
     override init() {
         

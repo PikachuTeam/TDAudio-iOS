@@ -18,18 +18,15 @@ class DataManager {
     
     private let remoteConfig : RemoteConfig
     private let userDefaults : UserDefaults
-    private lazy var originalItems: [AudioModel] = {
-        [unowned self] in
-        return self.getLocalData()
-        }()!
+    private var originalItems: [AudioModel]? = nil
     
     private lazy var items : [AudioModel] = {
-        return self.originalItems
+        return self.originalItems!
     }()
     
     private var imageSet : [String]? = nil
     private var unlockedStatus : [String:Bool] = [:]
-   
+    
     
     private init (){
         remoteConfig = RemoteConfig.remoteConfig()
@@ -108,20 +105,22 @@ class DataManager {
     func getData(filter: SpeakerFilter) -> [AudioModel] {
         switch filter {
         case .Male:
-            items = originalItems.filter({ (item) -> Bool in
+            items = getLocalData()!.filter({ (item) -> Bool in
                 return item.speaker==1
             })
             break
         case .Female:
-            items = originalItems.filter({ (item) -> Bool in
+            items = getLocalData()!.filter({ (item) -> Bool in
                 return item.speaker==0
             })
-             break
+            break
         default:
-            items = originalItems
+            items = getLocalData()!
         }
         items.forEach { (item) in
-            item.isUnlocked = isItemUnlocked(id: item.id!)
+            if !item.isAdsItem{
+                item.isUnlocked = isItemUnlocked(id: item.id!)
+            }
         }
         AudioManager.instance.reloadAudioIndex()
         return items
@@ -228,11 +227,28 @@ class DataManager {
     }
     
     fileprivate func getLocalData() ->[AudioModel]? {
-        let data =  userDefaults.data(forKey: Constants.DataStore.KEY_AUDIO_DATA)
-        if let data = data {
-            return  NSKeyedUnarchiver.unarchiveObject(with: data) as? [AudioModel]
+        if originalItems == nil {
+            let data =  userDefaults.data(forKey: Constants.DataStore.KEY_AUDIO_DATA)
+            if let data = data {
+                let decodeData : [AudioModel]? =  NSKeyedUnarchiver.unarchiveObject(with: data) as? [AudioModel]
+                if !AdsManager.instance.isAdmobBannerEnable(){
+                    originalItems = decodeData
+                }else{
+                    var includeAdsData : [AudioModel]? = []
+                    let steps = Constants.BuildConfig.DEBUG ? Constants.Application.ADS_STEPS_DEBUG : Constants.Application.ADS_STEPS
+                    for index in 1 ..< decodeData!.count {
+                        includeAdsData?.append(decodeData![index])
+                        if index % steps == 0 {
+                            let adsItem = AudioModel()
+                            adsItem.isAdsItem = true
+                            includeAdsData?.append(adsItem)
+                        }
+                    }
+                    originalItems = includeAdsData
+                }
+            }
         }
-        return nil
+        return originalItems
     }
     
     fileprivate func setLocalData(audioModelList: [AudioModel]){
