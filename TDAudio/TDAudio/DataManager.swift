@@ -117,6 +117,8 @@ class DataManager {
         default:
             items = getLocalData()!
         }
+        addAdsItemsIfNeeded(items: &items)
+        
         items.forEach { (item) in
             if !item.isAdsItem{
                 item.isUnlocked = isItemUnlocked(id: item.id!)
@@ -231,21 +233,7 @@ class DataManager {
             let data =  userDefaults.data(forKey: Constants.DataStore.KEY_AUDIO_DATA)
             if let data = data {
                 let decodeData : [AudioModel]? =  NSKeyedUnarchiver.unarchiveObject(with: data) as? [AudioModel]
-                if !AdsManager.instance.isAdmobBannerEnable(){
-                    originalItems = decodeData
-                }else{
-                    var includeAdsData : [AudioModel]? = []
-                    let steps = Constants.BuildConfig.DEBUG ? Constants.Application.ADS_STEPS_DEBUG : Constants.Application.ADS_STEPS
-                    for index in 1 ..< decodeData!.count {
-                        includeAdsData?.append(decodeData![index])
-                        if index % steps == 0 {
-                            let adsItem = AudioModel()
-                            adsItem.isAdsItem = true
-                            includeAdsData?.append(adsItem)
-                        }
-                    }
-                    originalItems = includeAdsData
-                }
+                originalItems = decodeData
             }
         }
         return originalItems
@@ -285,4 +273,22 @@ class DataManager {
         return audioModelList
     }
     
+    fileprivate func addAdsItemsIfNeeded( items : inout [AudioModel]){
+        if AdsManager.instance.isAdmobBannerEnable(){
+            var includeAdsData : [AudioModel] = []
+            if !items.isEmpty{
+                includeAdsData.append(items[0])
+            }
+            let steps = Constants.BuildConfig.DEBUG ? Constants.Application.ADS_STEPS_DEBUG : Constants.Application.ADS_STEPS
+            for index in 1 ..< items.count {
+                includeAdsData.append(items[index])
+                if index % steps == 0 {
+                    let adsItem = AudioModel()
+                    adsItem.isAdsItem = true
+                    includeAdsData.append(adsItem)
+                }
+            }
+            items = includeAdsData
+        }
+    }
 }

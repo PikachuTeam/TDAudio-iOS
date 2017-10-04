@@ -121,8 +121,14 @@ class AudioManager :NSObject{
     }
     
     func next()  {
+        pause()
         if audioIndex != nil{
             audioIndex! += 1
+            var item = DataManager.instance.getItem(atIndex: audioIndex)
+            while (item!.isAdsItem) {
+                audioIndex! += 1
+                item = DataManager.instance.getItem(atIndex: audioIndex)
+            }
             prepare(audioIndex: audioIndex!)
             play()
             audioEvent.value = AudioEvent.Next
@@ -130,8 +136,14 @@ class AudioManager :NSObject{
     }
     
     func previous() {
+        pause()
         if audioIndex != nil{
             audioIndex! -= 1
+            var item = DataManager.instance.getItem(atIndex: audioIndex)
+            while (item!.isAdsItem) {
+                 audioIndex! -= 1
+                 item = DataManager.instance.getItem(atIndex: audioIndex)
+            }
             prepare(audioIndex: audioIndex!)
             play()
             audioEvent.value = AudioEvent.Previous

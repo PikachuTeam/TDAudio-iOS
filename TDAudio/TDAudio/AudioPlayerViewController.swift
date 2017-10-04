@@ -151,6 +151,7 @@ extension AudioPlayerViewController : AudioPlayerDelegate {
     func audioChanged(item: AudioModel){
         self.navigationItem.title = item.name
     }
+    
 
 }
 

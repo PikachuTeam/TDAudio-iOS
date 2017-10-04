@@ -16,7 +16,7 @@ typealias Error = (Int) -> Void
 struct Constants {
     
     struct BuildConfig {
-        static let DEBUG = true
+        static let DEBUG = false
     }
     
     struct Application {

@@ -20,7 +20,9 @@ class ListAudioViewController: BaseAudioViewController {
     @IBOutlet weak var btnPlay: UIButton!
     @IBOutlet weak var imgBackground: UIImageView!
     @IBOutlet weak var imgLoading: UIImageView!
-    
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var labelDuration: UILabel!
+    @IBOutlet weak var labelCurrent: UILabel!
     
     let viewModel = ListAudioViewModel()
     
@@ -32,6 +34,7 @@ class ListAudioViewController: BaseAudioViewController {
         configView()
         configCheckBox()
         NotificationCenter.default.addObserver(self, selector:#selector(self.appEnterFromBackground), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
+        reloadUIState()
     }
     
     @IBAction func switchPlayAndPause(_ sender: Any) {
@@ -51,6 +54,10 @@ class ListAudioViewController: BaseAudioViewController {
         openAudioPlayerScreenIfNeeded()
     }
     
+
+    @IBAction func seekTo(_ sender: UISlider) {
+        viewModel.seekTo(value: sender.value)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -60,7 +67,7 @@ class ListAudioViewController: BaseAudioViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.viewWillAppear()
-        reloadUIState()
+        //reloadUIState()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,7 +96,12 @@ class ListAudioViewController: BaseAudioViewController {
                 self.view.getContraint(withIdentifier: "tableViewBottomContraint")?.constant = 0
             }
         }
-        setPlayingState(isPlaying: viewModel.getCurrentPlayingTime() > 0)
+        let isLoaded = viewModel.getCurrentPlayingTime() > 0
+        if(isLoaded){
+            setPlayingState(isLoaded: isLoaded, isPlaying: viewModel.isPlayingAudio())
+        }else{
+            setPlayingState(isLoaded: isLoaded, isPlaying: viewModel.getCurrentPlayingTime() > 0)
+        }
     }
     
     func configView()  {
@@ -129,22 +141,32 @@ class ListAudioViewController: BaseAudioViewController {
         self.viewModel.unlockedNewAudio(unlockedItem: unlockAudio)
     }
     
-    func setPlayingState(isPlaying: Bool)  {
+    func setPlayingState(isLoaded: Bool, isPlaying: Bool)  {
         if viewModel.getCurrentAudioItem() != nil{
-            if !isPlaying{
+            if !isLoaded && !isPlaying{
                 imgLoading.rotate360Degrees()
                 imgLoading.isHidden = false
                 btnPlay.isHidden = true
             }else{
+                labelDuration.text = viewModel.getDurationText()
+                slider.value = viewModel.getCurrentPlayingTime()
+                slider.maximumValue = viewModel.getDurationNumber()!
+                
                 imgLoading.layer.removeAllAnimations()
                 imgLoading.isHidden = true
                 btnPlay.isHidden = false
-                btnPlay.setImage(R.image.pause(), for: .normal)
+                if isPlaying{
+                    btnPlay.setImage(R.image.pause(), for: .normal)
+                }
+                else{
+                     btnPlay.setImage(R.image.play(), for: .normal)
+                }
             }
         }
     }
     
     deinit {
+        viewModel.destroy()
         NotificationCenter.default.removeObserver(self)
     }
 }
@@ -242,11 +264,11 @@ extension ListAudioViewController : ListAudioDelegate {
     }
     
     func audioPreparing() {
-        setPlayingState(isPlaying: false)
+        setPlayingState(isLoaded: false, isPlaying: false)
     }
     
     func audioChangeStatePlaying(){
-        setPlayingState(isPlaying: true)
+        setPlayingState(isLoaded: true,isPlaying: true)
         btnPlay.setImage(R.image.pause(), for: .normal)
     }
     
@@ -264,6 +286,24 @@ extension ListAudioViewController : ListAudioDelegate {
     
     func askingToUnlockAudio(index: Int, item: AudioModel) {
         showUnlockAudioPopup(index: index, item: item)
+    }
+    
+    func audioInteralUpdate(value: Float){
+        slider.isUserInteractionEnabled = true
+        self.slider.value = value
+        if value != 0 {
+            if slider.maximumValue == 0 {
+                slider.maximumValue = viewModel.getDurationNumber()!
+            }
+            if labelDuration.text == "00:00"{
+                labelDuration.text = viewModel.getDurationText()
+            }
+            labelCurrent.text = viewModel.getCurrentTimeText()
+        }else{
+            slider.isUserInteractionEnabled = false
+            labelDuration.text = "00:00"
+            labelCurrent.text = "00:00"
+        }
     }
 }
 

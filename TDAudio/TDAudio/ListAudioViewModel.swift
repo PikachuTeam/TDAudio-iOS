@@ -9,6 +9,7 @@
 import Foundation
 import MediaPlayer
 import CleanroomLogger
+import MediaPlayer
 
 protocol ListAudioDelegate: BaseViewDelegate {
     func itemsDidChange()
@@ -19,6 +20,7 @@ protocol ListAudioDelegate: BaseViewDelegate {
     func audioChangeStateNext()
     func audioChangeStatePrevious()
     func askingToUnlockAudio(index: Int, item : AudioModel)
+    func audioInteralUpdate(value: Float)
 }
 
 protocol ListAudioViewModelInterface : BaseViewModelInterface{
@@ -35,7 +37,12 @@ protocol ListAudioViewModelInterface : BaseViewModelInterface{
     func viewWillDisappear()
     func viewWillAppear()
     func unlockedNewAudio(unlockedItem : AudioModel)
-    func getCurrentPlayingTime() -> Double
+    func getCurrentPlayingTime() -> Float
+    func getDurationText() -> String?
+    func getDurationNumber() -> Float?
+    func getCurrentTimeText() -> String?
+    func destroy()
+    func seekTo(value : Float)
 }
 
 class ListAudioViewModel : ListAudioViewModelInterface{
@@ -44,6 +51,9 @@ class ListAudioViewModel : ListAudioViewModelInterface{
     weak var viewDelegate: ViewDelegate?{
         didSet{
             self.didChangeSpeakerFilter(male: true, female: true)
+            AudioManager.instance.registerAudioInteralUpdate { (time) in
+                self.viewDelegate?.audioInteralUpdate(value: Float(time))
+            }
         }
     }
     
@@ -153,7 +163,7 @@ class ListAudioViewModel : ListAudioViewModelInterface{
     }
     
     func viewWillDisappear(){
-        AudioManager.instance.unregisterAudioEventChange(identifier: "ListAudioViewModel.AudioEvent")
+        
     }
     
     func unlockedNewAudio(unlockedItem : AudioModel){
@@ -163,8 +173,42 @@ class ListAudioViewModel : ListAudioViewModelInterface{
         didSelectItemAtIndex(index: indexOf(item: unlockedItem)!)
     }
     
-    func getCurrentPlayingTime() -> Double{
-        return AudioManager.instance.getCurrentPlayingTime()
+    func getCurrentPlayingTime() -> Float{
+      return  Float(AudioManager.instance.getCurrentPlayingTime())
     }
     
+    func getDurationText() -> String?{
+        let duration = AudioManager.instance.getDuration()
+        if let duration = duration{
+            return duration.durationText
+        }
+        return nil
+    }
+    func getDurationNumber() -> Float?{
+        let duration = AudioManager.instance.getDuration()
+        if let duration = duration{
+            return Float(CMTimeGetSeconds(duration))
+        }
+        return nil
+    }
+    
+    func getCurrentTimeText() -> String?{
+        let current = AudioManager.instance.getCurrent()
+        if let current = current{
+            return current.durationText
+        }
+        return nil
+    }
+    
+    func destroy() {
+        AudioManager.instance.unregisterAudioEventChange(identifier: "ListAudioViewModel.AudioEvent")
+        AudioManager.instance.unRegisterAudioInteralUpdate()
+    }
+    
+    func seekTo(value : Float){
+        let seconds : Int64 = Int64(value)
+        let targetTime : CMTime = CMTimeMake(seconds, 1)
+        AudioManager.instance.seekTo(time: targetTime)
+    }
+
 }
