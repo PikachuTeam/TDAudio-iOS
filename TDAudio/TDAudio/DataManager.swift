@@ -38,10 +38,13 @@ class DataManager {
         Log.info?.message("start cheking audio version")
         checkVersion(localVersion: getLocalAudioVersion(), localData: localData) { (isSuccessful, isNewVersionAvailable, version) in
             Log.info?.message("checking version is Done \nisSuccessful = \(isSuccessful), isNewVersionAvailable = \(isNewVersionAvailable), version = \(version))")
+            let isInReview = self.isInReview()
             if(isSuccessful){
                 if(!isNewVersionAvailable){
-                    completion()
-                    return
+                    if !isInReview {
+                        completion()
+                        return
+                    }
                 }
             }else{
                 if(localData != nil){
@@ -49,9 +52,10 @@ class DataManager {
                     return
                 }
             }
+            let tableNameRelease = isInReview ? Constants.Parse.TABLE_NAME_REVIEW : Constants.Parse.TABLE_NAME
             
             Log.info?.message("start getting data")
-            let tableName = Constants.BuildConfig.DEBUG ? Constants.Parse.TABLE_NAME_DEBUG : Constants.Parse.TABLE_NAME
+            let tableName = Constants.BuildConfig.DEBUG ? Constants.Parse.TABLE_NAME_DEBUG : tableNameRelease
             let query = PFQuery(className: tableName)
             query.order(byAscending: "createdAt")
             query.findObjectsInBackground(block: { (result, parseErr) in
@@ -190,6 +194,10 @@ class DataManager {
                 let images = self.remoteConfig[Constants.FireBase.KEY_IMAGES].stringValue
                 self.setImages(images: images)
                 
+                //review version
+                let reviewVersion = self.remoteConfig[Constants.FireBase.KEY_REVIEW_VERSION].stringValue!
+                self.setReviewVersion(reviewVerion: reviewVersion)
+                
                 //audio
                 let remoteVersion = self.remoteConfig[Constants.FireBase.KEY_AUDIO_VERSION].numberValue as? Int
                 if let remoteVersion = remoteVersion {
@@ -206,6 +214,20 @@ class DataManager {
                 completion(false, false, localVersion)
             }
         }
+    }
+    
+    fileprivate func setReviewVersion (reviewVerion: String){
+        userDefaults.set(reviewVerion, forKey: Constants.DataStore.KEY_REVIEW_VERSION)
+    }
+    
+    fileprivate func isInReview() -> Bool {
+        let reviewVersion = userDefaults.string(forKey: Constants.DataStore.KEY_REVIEW_VERSION)
+        if let reviewVersion = reviewVersion{
+            let arrVersions = reviewVersion.components(separatedBy: ",")
+            let localBuildVersion =  "\(Bundle.main.buildVersionNumber!)"
+            return arrVersions.index(of: localBuildVersion) != nil
+        }
+        return false
     }
     
     fileprivate func setAds(adsAvailable: String){

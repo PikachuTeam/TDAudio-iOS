@@ -35,6 +35,7 @@ struct Constants {
         static let KEY_IMAGE_COUNT = "image_count"
         static let KEY_AUDIO_UNLOCKED_STATUS = "audio_unlocked_status"
         static let KEY_ADS_AVAILABLE = "ads_available"
+        static let KEY_REVIEW_VERSION = "review_version"
         static let IMAGES_PREVIEW_DEBUG = ["https://i.pinimg.com/736x/e1/5c/66/e15c662cad4690cfa86b38b9faa1edae--lion-of-judah-the-lion-king.jpg","https://s-media-cache-ak0.pinimg.com/originals/5d/60/74/5d6074ab580cca3d2524ce9fb10e53b1.jpg","http://4.bp.blogspot.com/-NOWfKyRjV_s/UusotZ0tRcI/AAAAAAAAI8k/OKTipZfsOHU/s1600/ec1f120eaa6af63dd5b028622db1c66d.jpg", "https://images.fineartamerica.com/images-medium-large-5/portrait-of-a-lion-lucie-bilodeau.jpg"]
     }
     
@@ -42,6 +43,7 @@ struct Constants {
         static let KEY_AUDIO_VERSION = "AUDIO_VERSION"
         static let KEY_IMAGES = "IMAGES"
         static let KEY_ADS_AVAILABLE = "ADS_AVAILABLE"
+        static let KEY_REVIEW_VERSION = "REVIEW_VERSION"
     }
     
     struct Parse {
@@ -49,6 +51,7 @@ struct Constants {
         static let CLIENT_KEY = "Nl6kf77lJyc7bx6UchhPAiMCPR6dnAbePRK1tepH"
         static let SERVER = "https://parseapi.back4app.com"
         static let TABLE_NAME = "tbl_tdaudio"
+        static let TABLE_NAME_REVIEW = "tbl_audio_review"
         static let TABLE_NAME_DEBUG = "tbl_audio"
     }
     
