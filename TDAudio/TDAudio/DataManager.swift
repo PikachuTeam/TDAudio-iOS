@@ -276,7 +276,9 @@ class DataManager {
                 model.name = object["name"] as? String
                 model.speaker = object["speaker"] as! Int
                 model.url = object["audio"] as? String
+                model.url = model.url?.replace(target: "www.dropbox.com", withString: "dl.dropboxusercontent.com").replace(target: "dl=0", withString: "dl=1")
                 model.image = object["image"] as? String
+                model.image = model.image?.replace(target: "www.dropbox.com", withString: "dl.dropboxusercontent.com").replace(target: "dl=0", withString: "dl=1")
                 let unlocked = object["unlocked"] as! Bool
                 let exist = unlockedStatus.index(forKey: model.id!) != nil
                 if exist {
